@@ -16,7 +16,8 @@ A simple Flask-based API that provides the server's current geographical locatio
 ## Installation
 1. Clone the repository:
 	```powershell
-	git clone https://github.com/wajidkorkani/Device-Tracker.git
+	git clone https://github.com/wajidkorkani/Bus-Loaction-Tracker
+.git
 	cd Device-Tracker
 	```
 2. Install dependencies:
