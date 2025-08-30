@@ -1,23 +1,26 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
+import requests
 
 app = Flask(__name__)
 CORS(app)
 
-# Temporary storage (use a DB in production)
-bus_location = {"lat": None, "lng": None}
+# Get server's location at startup using IP geolocation API
+def get_server_location():
+    try:
+        response = requests.get("https://ipapi.co/json/")
+        if response.status_code == 200:
+            data = response.json()
+            return {"lat": data.get("latitude"), "lng": data.get("longitude")}
+    except Exception as e:
+        print("Error getting server location:", e)
+    return {"lat": None, "lng": None}
 
-@app.route('/update-location', methods=['POST'])
-def update_location():
-    global bus_location
-    data = request.json
-    bus_location['lat'] = data.get('lat')
-    bus_location['lng'] = data.get('lng')
-    return jsonify({"status": "success", "message": "Location updated"}), 200
 
-@app.route('/get-location', methods=['GET'])
+@app.route('/get-location')
 def get_location():
-    return jsonify(bus_location), 200
+    # Always get fresh server location when called
+    return jsonify(get_server_location()), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
